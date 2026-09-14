@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Путь Руси</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap');
+
+  :root{
+    --orange1: #F3934A;
+    --orange2: #E8792B;
+    --orange3: #D9631A;
+    --white: #FFFFFF;
+    --cream: #FFF7EE;
+    --ink: #3A2A1A;
+    --ink-soft: #7A6A57;
+    --good: #4C9E5A;
+    --good-bg: #E3F5E5;
+    --bad: #E15B4A;
+    --bad-bg: #FDE6E2;
+    --navy: #3B4A7A;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Nunito', sans-serif;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% -10%, #FBAE5C 0%, var(--orange1) 35%, var(--orange2) 70%, var(--orange3) 100%);
+    display:flex; align-items:center; justify-content:center;
+    padding: 24px 14px;
+  }
+  h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; }
+
+  .stage{ width:100%; max-width: 420px; }
+
+  /* ---------- Sunburst deco on intro ---------- */
+  .sunburst{
+    position: relative;
+    text-align:center;
+    margin-bottom: -18px;
+    z-index:0;
+  }
+  .paw-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background: rgba(255,255,255,0.92);
+    border-radius:999px; padding: 7px 16px 7px 10px;
+    font-weight:800; font-size:12.5px; color: var(--orange3);
+    box-shadow: 0 4px 10px rgba(120,50,0,0.15);
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background: var(--white);
+    border-radius: 22px;
+    padding: 26px 22px;
+    box-shadow: 0 20px 45px -18px rgba(120,50,0,0.45);
+    position: relative;
+    z-index:1;
+  }
+
+  /* ---------- Intro ---------- */
+  .intro-card{ text-align:center; padding-top: 30px; }
+  .intro-card h1{ font-size: 27px; color: var(--orange3); line-height:1.2; margin: 6px 0 10px; }
+  .intro-card p{ color: var(--ink-soft); font-size:14.5px; line-height:1.5; margin: 0 0 18px; }
+  .cat-emoji{ font-size: 46px; margin-bottom:4px; }
+
+  .rounds-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:22px; text-align:left; }
+  .rounds-list .ri{
+    display:flex; align-items:center; gap:10px;
+    background: var(--cream); border-radius:12px; padding:10px 12px;
+    font-size:13px; font-weight:700; color: var(--ink);
+  }
+  .rounds-list .ri .num{
+    width:24px;height:24px;border-radius:50%;
+    background: var(--orange2); color:#fff; font-size:12px;
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  .rounds-list .ri .yrs{ margin-left:auto; font-weight:800; color: var(--orange3); font-size:12px; }
+
+  .big-btn{
+    width:100%;
+    background: var(--orange2);
+    color:#fff;
+    border:none;
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 17px;
+    cursor:pointer;
+    box-shadow: 0 6px 0 var(--orange3);
+    transition: transform .08s ease;
+  }
+  .big-btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 var(--orange3); }
+
+  /* ---------- Round-break ---------- */
+  .break-card{ text-align:center; padding: 34px 22px; }
+  .break-emoji{ font-size:48px; margin-bottom:10px; }
+  .break-card h2{ font-size:21px; color: var(--orange3); margin-bottom: 8px; }
+  .break-card p{ color: var(--ink-soft); font-size:14px; margin:0 0 20px; }
+  .paws-row{ display:flex; justify-content:center; gap:6px; margin-bottom:20px; }
+  .paws-row span{ font-size:20px; opacity:.25; }
+  .paws-row span.on{ opacity:1; }
+
+  /* ---------- Play card ---------- */
+  .play-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .round-tag{ font-size:11.5px; font-weight:800; color: var(--orange3); text-transform:uppercase; letter-spacing:.03em; }
+  .q-progress{ display:flex; gap:5px; }
+  .q-progress .dot{ width:8px; height:8px; border-radius:50%; background:#F0E2D2; }
+  .q-progress .dot.done{ background: var(--good); }
+  .q-progress .dot.now{ background: var(--orange2); transform: scale(1.3); }
+
+  .year-chip{
+    display:inline-block;
+    background: var(--cream);
+    color: var(--orange3);
+    font-weight:800;
+    font-size:13px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  .narrative{ font-size:14.5px; color: var(--ink); line-height:1.5; margin-bottom:14px; }
+
+  .question{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 16.5px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height:1.3;
+  }
+
+  .choices{ display:flex; flex-direction:column; gap:9px; }
+  .choice{
+    text-align:left;
+    background: var(--cream);
+    border: none;
+    border-radius: 12px;
+    padding: 13px 14px;
+    font-family:'Nunito', sans-serif;
+    font-weight:700;
+    font-size: 14px;
+    color: var(--ink);
+    cursor:pointer;
+    transition: transform .08s ease, background .12s ease;
+  }
+  .choice:hover:not(:disabled){ background:#FDEFDD; }
+  .choice:active:not(:disabled){ transform: scale(0.985); }
+  .choice:disabled{ cursor:default; }
+  .choice.correct{ background: var(--good-bg); color:#2C5C33; }
+  .choice.wrong{ background: var(--bad-bg); color:#8A362A; }
+  .choice.muted{ opacity:.4; }
+
+  .feedback{
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--cream);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height:1.45;
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback b{ color: var(--ink); }
+
+  .next-btn{
+    margin-top: 16px;
+    width:100%;
+    background: var(--orange2);
+    color:#fff;
+    border:none;
+    border-radius: 12px;
+    padding: 13px 18px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    cursor:pointer;
+    display:none;
+    box-shadow: 0 4px 0 var(--orange3);
+  }
+  .next-btn.show{ display:block; }
+
+  /* ---------- End ---------- */
+  .end-card{ text-align:center; padding: 34px 24px; }
+  .end-emoji{ font-size:52px; margin-bottom:8px; }
+  .end-card h1{ font-size: 24px; color: var(--orange3); margin-bottom:10px; }
+  .end-card p{ color: var(--ink-soft); font-size:14.5px; line-height:1.5; margin:0 0 20px; }
+  .score-badge{
+    display:inline-block;
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 14px 26px;
+    margin-bottom: 20px;
+  }
+  .score-badge .n{ font-family:'Baloo 2',sans-serif; font-size:32px; font-weight:800; color: var(--orange3); }
+  .score-badge .l{ font-size:11.5px; color: var(--ink-soft); font-weight:700; margin-top:2px; }
+
+  .replay-btn{
+    background: transparent; border:2px solid var(--orange2); color: var(--orange3);
+    border-radius:12px; padding:12px 20px; font-family:'Baloo 2',sans-serif; font-weight:700;
+    font-size:14px; cursor:pointer; width:100%;
+  }
+
+  .hidden{ display:none !important; }
+
+  @media (max-width:420px){
+    .card{ padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- INTRO -->
+  <div id="introScreen">
+    <div class="sunburst">
+      <div class="paw-badge">🐾 История и котики</div>
+    </div>
+    <div class="card intro-card">
+      <div class="cat-emoji">😼</div>
+      <h1>Путь Руси</h1>
+      <p>862–988 год: от призвания Рюрика до крещения Руси. Три коротких раунда, по 2–3 события в каждом — проходи в своём темпе.</p>
+      <div class="rounds-list">
+        <div class="ri"><div class="num">1</div>Рождение державы<div class="yrs">862–911</div></div>
+        <div class="ri"><div class="num">2</div>Испытания рода<div class="yrs">912–972</div></div>
+        <div class="ri"><div class="num">3</div>Итог правления<div class="yrs">980–988</div></div>
+      </div>
+      <button class="big-btn" onclick="startGame()">Начать игру →</button>
+    </div>
+  </div>
+
+  <!-- ROUND BREAK -->
+  <div class="card break-card hidden" id="breakScreen">
+    <div class="break-emoji" id="breakEmoji">🎉</div>
+    <h2 id="breakTitle"></h2>
+    <p id="breakText"></p>
+    <div class="paws-row" id="pawsRow"></div>
+    <button class="big-btn" onclick="continueAfterBreak()" id="breakBtn">Продолжить →</button>
+  </div>
+
+  <!-- PLAY -->
+  <div class="card hidden" id="playScreen">
+    <div class="play-header">
+      <span class="round-tag" id="roundTag"></span>
+      <div class="q-progress" id="qProgress"></div>
+    </div>
+    <div class="year-chip" id="yearChip"></div>
+    <div class="narrative" id="narrativeText"></div>
+    <div class="question" id="questionText"></div>
+    <div class="choices" id="choicesBox"></div>
+    <div class="feedback" id="feedbackBox"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Дальше →</button>
+  </div>
+
+  <!-- END -->
+  <div class="card end-card hidden" id="endScreen">
+    <div class="end-emoji" id="endEmoji">👑</div>
+    <h1 id="endTitle"></h1>
+    <div class="score-badge">
+      <div class="n" id="endScore">0/8</div>
+      <div class="l">верных ответов</div>
+    </div>
+    <p id="endText"></p>
+    <button class="replay-btn" onclick="location.reload()">Сыграть заново</button>
+  </div>
+
+</div>
+
+<script>
+const rounds = [
+  {
+    tag: "Раунд 1 · Рождение державы",
+    breakTitleBefore: null,
+    questions: [
+      {
+        year: "862",
+        narrative: "Северные племена устали от распрей и позвали варягов: «Земля наша велика, а порядка нет — приходите княжить».",
+        question: "Кто из братьев-варягов сел в Новгороде и стал родоначальником династии?",
+        choices: [
+          { text: "Рюрик", correct: true },
+          { text: "Синеус", correct: false },
+          { text: "Трувор", correct: false }
+        ],
+        feedback: { correct: "Верно! Рюрик обосновался в Новгороде, а его братья — в Белоозере и Изборске.", wrong: "Правильный ответ — <b>Рюрик</b>. Синеус и Трувор княжили в Белоозере и Изборске, но вскоре умерли." }
+      },
+      {
+        year: "882",
+        narrative: "После смерти Рюрика править стал его родич Олег. Он хитростью выманил из Киева правителей Аскольда и Дира.",
+        question: "Как Олег назвал объединённый им Киев?",
+        choices: [
+          { text: "«Мать городов русских»", correct: true },
+          { text: "«Второй Царьград»", correct: false },
+          { text: "«Новый Новгород»", correct: false }
+        ],
+        feedback: { correct: "Верно! Объединив Новгород и Киев в 882 году, Олег фактически создал единое государство.", wrong: "Верный ответ — «<b>мать городов русских</b>». Так Олег назвал Киев, объединив его с Новгородом в 882 году." }
+      },
+      {
+        year: "907 / 911",
+        narrative: "Окрепшая Русь пошла на Царьград — по легенде, Олег поставил корабли на колёса, чтобы обойти цепи в бухте.",
+        question: "Чем завершился поход Олега на Византию?",
+        choices: [
+          { text: "Выгодным торговым договором", correct: true },
+          { text: "Разгромом русского войска", correct: false },
+          { text: "Штурмом и разграблением города", correct: false }
+        ],
+        feedback: { correct: "Верно! Договор 907/911 года дал русским купцам право беспошлинной торговли в Константинополе.", wrong: "На самом деле поход завершился <b>выгодным договором</b> — русские купцы получили право беспошлинной торговли." }
+      }
+    ]
+  },
+  {
+    tag: "Раунд 2 · Испытания рода",
+    questions: [
+      {
+        year: "945",
+        narrative: "Князь Игорь дважды за зиму пришёл за данью к древлянам — с малой дружиной, желая забрать больше.",
+        question: "Чем это обернулось для Игоря?",
+        choices: [
+          { text: "Древляне убили его за нарушение обычая", correct: true },
+          { text: "Древляне увеличили дань без сопротивления", correct: false },
+          { text: "Игорь простил их и отменил полюдье", correct: false }
+        ],
+        feedback: { correct: "Верно! Древляне рассудили: «повадится волк к овцам — вынесет всё стадо» — и убили Игоря.", wrong: "Древляне <b>убили Игоря</b> — сочли повторный сбор дани произволом." }
+      },
+      {
+        year: "945–964",
+        narrative: "Вдова Игоря, Ольга, отомстила древлянам, а затем занялась куда более важным делом.",
+        question: "Что ввела Ольга, чтобы упорядочить сбор дани?",
+        choices: [
+          { text: "Уроки и погосты", correct: true },
+          { text: "Оброк и барщину", correct: false },
+          { text: "Виру и продажу", correct: false }
+        ],
+        feedback: { correct: "Верно! «Уроки» — фиксированный размер дани, «погосты» — места её сбора. Первая налоговая реформа Руси.", wrong: "Правильный ответ — «<b>уроки и погосты</b>» — фиксированный размер и постоянные места сбора дани." }
+      },
+      {
+        year: "964–972",
+        narrative: "Сын Ольги, Святослав, почти всё правление провёл в походах, посылая врагам одну фразу: «Иду на вы».",
+        question: "Какое государство он разгромил, освободив славян от давней дани?",
+        choices: [
+          { text: "Хазарский каганат", correct: true },
+          { text: "Волжскую Булгарию", correct: false },
+          { text: "Византийскую империю", correct: false }
+        ],
+        feedback: { correct: "Верно! Разгром Хазарского каганата открыл Волжский торговый путь и освободил славян от хазарской дани.", wrong: "Святослав разгромил <b>Хазарский каганат</b> — главную преграду на Волжском торговом пути." }
+      }
+    ]
+  },
+  {
+    tag: "Раунд 3 · Итог правления",
+    questions: [
+      {
+        year: "980",
+        narrative: "После усобицы сыновей Святослава к власти пришёл Владимир. Он свёз в Киев идолов разных племенных богов на один холм.",
+        question: "Почему эта языческая реформа не достигла цели?",
+        choices: [
+          { text: "Единый пантеон не заменил потребность в одной сильной вере", correct: true },
+          { text: "Киевляне отказались поклоняться новым богам", correct: false },
+          { text: "Реформу отменил византийский император", correct: false }
+        ],
+        feedback: { correct: "Верно! Объединение старых культов не дало Руси того, что нужно — единой религии, сплачивающей государство.", wrong: "Дело в том, что <b>простое объединение богов не создало единой веры</b>, способной сплотить государство." }
+      },
+      {
+        year: "988",
+        narrative: "Владимир выбрал веру самого сильного соседа Руси — Византии — и женился на её принцессе Анне.",
+        question: "Какое событие завершает формирование Древнерусского государства?",
+        choices: [
+          { text: "Крещение Руси по православному обряду", correct: true },
+          { text: "Заключение вечного мира с Хазарией", correct: false },
+          { text: "Основание Москвы как новой столицы", correct: false }
+        ],
+        feedback: { correct: "Верно! В 988 году Русь приняла православие — вместе с ним пришли письменность и статус среди христианских держав.", wrong: "Русь приняла <b>православное христианство</b> — процесс, начатый Рюриком, завершился." }
+      }
+    ]
+  }
+];
+
+let roundIdx = 0;
+let qIdx = 0;
+let score = 0;
+let answered = false;
+const totalQuestions = rounds.reduce((s,r) => s + r.questions.length, 0);
+
+function startGame(){
+  document.getElementById('introScreen').classList.add('hidden');
+  showRoundBreak(true);
+}
+
+function showRoundBreak(isStart){
+  document.getElementById('playScreen').classList.add('hidden');
+  document.getElementById('breakScreen').classList.remove('hidden');
+
+  const r = rounds[roundIdx];
+  document.getElementById('breakEmoji').textContent = isStart ? '🚩' : '✅';
+  document.getElementById('breakTitle').textContent = isStart ? r.tag.split(' · ')[1] : 'Раунд пройден!';
+  document.getElementById('breakText').textContent = isStart
+    ? 'Впереди ' + r.questions.length + ' коротких вопроса. Погнали?'
+    : 'Дружина растёт. Готов(а) к следующему отрезку пути?';
+
+  const paws = document.getElementById('pawsRow');
+  paws.innerHTML = '';
+  for(let i=0;i<totalQuestions;i++){
+    const s = document.createElement('span');
+    s.textContent = '🐾';
+    if(i < score) s.classList.add('on');
+    paws.appendChild(s);
+  }
+
+  document.getElementById('breakBtn').textContent = isStart ? 'Начать раунд →' : 'Продолжить →';
+}
+
+function continueAfterBreak(){
+  document.getElementById('breakScreen').classList.add('hidden');
+  document.getElementById('playScreen').classList.remove('hidden');
+  qIdx = 0;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const r = rounds[roundIdx];
+  const q = r.questions[qIdx];
+
+  document.getElementById('roundTag').textContent = r.tag;
+  document.getElementById('yearChip').textContent = q.year;
+  document.getElementById('narrativeText').textContent = q.narrative;
+  document.getElementById('questionText').textContent = q.question;
+
+  const prog = document.getElementById('qProgress');
+  prog.innerHTML = '';
+  r.questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    if(i < qIdx) d.classList.add('done');
+    else if(i === qIdx) d.classList.add('now');
+    prog.appendChild(d);
+  });
+
+  const box = document.getElementById('choicesBox');
+  box.innerHTML = '';
+  q.choices.forEach((c) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = c.text;
+    btn.onclick = () => selectChoice(btn, c);
+    box.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.classList.remove('show'); fb.innerHTML = '';
+  document.getElementById('nextBtn').classList.remove('show');
+}
+
+function selectChoice(btn, choice){
+  if(answered) return;
+  answered = true;
+  const q = rounds[roundIdx].questions[qIdx];
+  const allBtns = document.querySelectorAll('#choicesBox .choice');
+
+  allBtns.forEach(b => {
+    b.disabled = true;
+    const isThisCorrect = q.choices.find(c => c.text === b.textContent).correct;
+    if(isThisCorrect) b.classList.add('correct');
+    else if(b === btn) b.classList.add('wrong');
+    else b.classList.add('muted');
+  });
+
+  if(choice.correct) score++;
+
+  const fb = document.getElementById('feedbackBox');
+  fb.innerHTML = choice.correct ? q.feedback.correct : q.feedback.wrong;
+  fb.classList.add('show');
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion(){
+  qIdx++;
+  if(qIdx >= rounds[roundIdx].questions.length){
+    roundIdx++;
+    if(roundIdx >= rounds.length){
+      showEnd();
+    } else {
+      showRoundBreak(false);
+    }
+  } else {
+    renderQuestion();
+  }
+}
+
+function showEnd(){
+  document.getElementById('playScreen').classList.add('hidden');
+  document.getElementById('breakScreen').classList.add('hidden');
+  document.getElementById('endScreen').classList.remove('hidden');
+  document.getElementById('endScore').textContent = score + '/' + totalQuestions;
+
+  let emoji, title, text;
+  if(score === totalQuestions){
+    emoji = '👑'; title = 'Вещий правитель!';
+    text = 'Все восемь поворотов — от Рюрика до крещения Руси — пройдены без единой ошибки.';
+  } else if(score >= totalQuestions - 2){
+    emoji = '🐾'; title = 'Опытный князь';
+    text = 'Почти всё государство собрано верно — загляни в подсказки там, где дружина не выросла.';
+  } else if(score >= totalQuestions/2){
+    emoji = '📜'; title = 'Молодой княжич';
+    text = 'Основа известна, детали ещё путаются. Сыграй ещё раз и обрати внимание на подсказки.';
+  } else {
+    emoji = '😼'; title = 'Только начало пути';
+    text = 'Даже у Рюрика поначалу была всего одна крепость. Попробуй ещё раз!';
+  }
+  document.getElementById('endEmoji').textContent = emoji;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endText').textContent = text;
+}
+</script>
+</body>
+</html>
